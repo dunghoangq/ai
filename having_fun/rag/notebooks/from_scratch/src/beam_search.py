@@ -10,8 +10,8 @@ def beam_search(query_embedding: np.ndarray, root: GraphNode, k: int):
 
     heapq.heappush(queue, (cosine_similarity(query_embedding, root.embedding), root))
 
-    while queue is not None:
-        _, node = queue.pop()
+    while queue:
+        _, node = heapq.heappop(queue)
         visited.append(node)
 
         for neighbour in node.neighbours:
