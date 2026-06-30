@@ -1,5 +1,5 @@
-from document import DocumentChunk
-from embedding import cosine_similarity
+from github.ai.having_fun.rag.src.document import DocumentChunk
+from github.ai.having_fun.rag.src.embedding import cosine_similarity
 
 class BruteForceVectorIndex:
 

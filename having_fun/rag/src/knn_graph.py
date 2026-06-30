@@ -1,4 +1,4 @@
-from embedding import cosine_similarity
+from github.ai.having_fun.rag.src.embedding import cosine_similarity
 
 class GraphNode:
 

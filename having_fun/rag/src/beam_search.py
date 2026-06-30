@@ -1,6 +1,6 @@
 import numpy as np
-from knn_graph import GraphNode
-from embedding import cosine_similarity
+from github.ai.having_fun.rag.src.knn_graph import GraphNode
+from github.ai.having_fun.rag.src.embedding import cosine_similarity
 import heapq # for priority queue
 
 def beam_search(query_embedding: np.ndarray, root: GraphNode, k: int):
