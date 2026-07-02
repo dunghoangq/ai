@@ -41,6 +41,11 @@ class KMeans:
         self.labels = np.argmax(scores, axis=1)
 
     def update_centroids(self, vectors: np.ndarray):
+        '''
+        Traditional K-Means minimises Euclidean distance and updates centroids with the arithmetic mean. If you want cosine similarity, you'd normally normalise the vectors and centroids (sometimes called spherical K-Means).
+
+        For learning purposes, your implementation is perfectly fine. Just be aware that you're mixing two different clustering objectives.
+        '''
         if self.centroids is None or self.labels is None:
             return "No centroids or labels to update!"
         
