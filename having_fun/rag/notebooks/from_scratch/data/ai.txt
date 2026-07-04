@@ -1,0 +1,11 @@
+Retrieval-Augmented Generation (RAG) optimizes the output of a Large Language Model.
+It references an authoritative knowledge base outside its training data sources.
+LLMs are trained on vast volumes of data to generate responses.
+However, they lack access to real-time or proprietary internal company information.
+RAG bridges this gap by fetching relevant documents based on user queries.
+The system converts the query into a numerical vector representation.
+It searches a vector database to find the most similar context.
+The retrieved context is appended to the original user prompt.
+This combined prompt is then sent to the language model.
+The LLM generates an accurate response grounded in the provided facts.
+This process significantly reduces hallucinations and improves response reliability.

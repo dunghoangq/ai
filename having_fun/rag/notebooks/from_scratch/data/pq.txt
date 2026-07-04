@@ -1,0 +1,10 @@
+Product Quantization (PQ) is a lossy compression technique for high-dimensional vectors.
+It solves storage and speed challenges in large-scale vector search.
+PQ breaks down a high-dimensional vector space into smaller orthogonal subspaces.
+Each subspace is clustered independently using algorithms like k-means.
+The original vector components are replaced by the nearest cluster centroid ID.
+This allows a large floating-point vector to be represented by a few bytes.
+Memory usage is drastically reduced, often by a factor of 10 to 20.
+Distance computations are accelerated using precomputed asymmetric distance tables.
+While PQ introduces quantization noise, it maintains acceptable search accuracy.
+It is highly effective for scaling RAG applications to millions of documents.
