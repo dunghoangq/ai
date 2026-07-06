@@ -1,5 +1,6 @@
 import faiss
 from abc import ABC, abstractmethod
+import numpy as np
 
 class VectorIndex(ABC):
     """
@@ -41,16 +42,26 @@ class VectorIndex(ABC):
             - D (np.ndarray): Distances
             - I (np.ndarray): Indices of retrieved vectors.
         """
-        return self.index.search(query, k)
+        query = np.asarray(query, dtype=np.float32)
+        if query.ndim == 1:
+            query = query.reshape(1, -1)
+        scores, ids = self.index.search(query, k)
+
+        return ids[0], scores[0]
     
     def save(self, path: str):
         """
         Save the FAISS index.
         """
-        faiss.write_index(self.index, path)
+        if self.index is None:
+            raise ValueError("Index has not been built.")
+        faiss.write_index(self.index, str(path))
     
-    def load(self, path: str):
+    @classmethod
+    def load(cls, path: str):
         """
         Load a FAISS index.
         """
-        self.index = faiss.read_index(path)
+        obj = cls()
+        obj.index = faiss.read_index(str(path))
+        return obj

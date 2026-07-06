@@ -1,6 +1,6 @@
 import numpy as np
 from .kmeans import KMeans
-from .embedding import cosine_similarity
+from .cosine_similarity import cosine_similarity
 
 class Posting:
 

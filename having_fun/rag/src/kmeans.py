@@ -1,5 +1,5 @@
 import numpy as np
-from .embedding import cosine_similarity
+from .cosine_similarity import cosine_similarity
 
 class KMeans:
     

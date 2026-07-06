@@ -11,7 +11,7 @@ import numpy as np
 import random
 import heapq
 
-from .embedding import cosine_similarity
+from .cosine_similarity import cosine_similarity
 
 class HNSWNode:
 

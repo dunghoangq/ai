@@ -4,6 +4,7 @@ from pathlib import Path
 import pickle
 import json
 from .vector_index import VectorIndex
+from .search_result import SearchResult
 
 class VectorStore:
 
@@ -29,17 +30,20 @@ class VectorStore:
             self.chunks.append(chunk_obj)
             texts.append(chunk_obj.text)
         
-        vectors = self.embedding_model.embed_documents(texts)
+        vectors = self.embedding_model.embed(texts)
         self.index.build(vectors)
 
 
     def search(self, query, k):
         query_vector = self.embedding_model.embed_query(query)
-        ids, scores = self.index.search(query_vector)
+        ids, scores = self.index.search(query_vector, k)
         results = []
 
-        for id in ids:
-            results.append(self.chunks[id])
+        for idx, score in zip(ids, scores):
+            results.append(SearchResult(
+                chunk=self.chunks[idx],
+                score=score
+            ))
         
         return results
 
