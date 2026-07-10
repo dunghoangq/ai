@@ -2,27 +2,28 @@
 
 To understand how Neural Network works, the underlying mathematics, I start with Building from Scratch.
 
-Each lesson has 4 parts:
+Each lesson has 5 parts:
 
-1. First principles — Why does this component exist? What problem does it solve?
-2. Mathematics — Derive the equations step by step, without skipping algebra or calculus.
-3. NumPy implementation — Build it from scratch with clean, well-structured classes.
-4. Verification — Compare the output with hand calculations and later with PyTorch to prove our implementation is correct.
+1. First principles — Why does this component exist? What limitation does it overcome?
+2. Mathematics — Derive the equations rigorously, without skipping steps.
+3. Implementation — Build it from scratch in clean, reusable NumPy code whenever there's an algorithm to implement.
+4. Verification — Validate with hand calculations, numerical tests, and eventually comparisons with PyTorch.
+5. Researcher's perspective — Connect the lesson to system design, computational efficiency, and the broader architecture of modern deep learning.
 
 ## Roadmap
 
 0. ✅ Linear Algebra
-1. Neuron*
-3. Single Layer Neural Network
-4. Backpropagation
-5. Gradient Descent
-6. Multi-layer Network
-7. Activation Functions
-8. Loss Functions
-9. Optimizers
-10. Mini-batch Training
-11. Regularization
-12. Build a mini PyTorch
+1. ✅ Neuron*
+2. ✅ Single Layer Neural Network
+3. ✅ Backpropagation
+4. Gradient Descent
+5. Multi-layer Network
+6. Activation Functions
+7. Loss Functions
+8. Optimizers
+9. Mini-batch Training
+10. Regularization
+11. Build a mini PyTorch
 
 
 ## Coding milestones
@@ -41,3 +42,19 @@ Each lesson has 4 parts:
 12. Mini autograd engine: How PyTorch's `backward()` works
 
 # Logs
+You designed me a Neural Networks from scratch learning roadmap that you would teach me as teaching an AI researcher at OpenAI, Anthropic.
+
+
+1. Why Learning is an Optimisation Problem
+2. Deriving Gradient Descent from First Principles
+3. One Parameter Gradient Descent
+4. Multi-dimensional Gradient Descent
+5. Learning Rate
+6. Implementing Gradient Descent (NumPy)
+7. Connecting Backpropagation to Gradient Descent
+8. Training Our First Neural Network
+9. Numerical Verification
+10. Geometry of Optimisation
+11. Researcher's Perspective
+
+
