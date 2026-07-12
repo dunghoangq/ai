@@ -16,7 +16,7 @@ Each lesson has 5 parts:
 1. ✅ Neuron*
 2. ✅ Single Layer Neural Network
 3. ✅ Backpropagation
-4. Gradient Descent
+4. ✅ Gradient Descent
 5. Multi-layer Network
 6. Activation Functions
 7. Loss Functions
@@ -44,17 +44,5 @@ Each lesson has 5 parts:
 # Logs
 You designed me a Neural Networks from scratch learning roadmap that you would teach me as teaching an AI researcher at OpenAI, Anthropic.
 
-
-1. Why Learning is an Optimisation Problem
-2. Deriving Gradient Descent from First Principles
-3. One Parameter Gradient Descent
-4. Multi-dimensional Gradient Descent
-5. Learning Rate
-6. Implementing Gradient Descent (NumPy)
-7. Connecting Backpropagation to Gradient Descent
-8. Training Our First Neural Network
-9. Numerical Verification
-10. Geometry of Optimisation
-11. Researcher's Perspective
 
 
