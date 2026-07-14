@@ -1,6 +1,7 @@
 import numpy as np
+from .layer import Layer
 
-class Linear:
+class Linear(Layer):
 
     def __init__(self, in_features: int, out_features: int):
         self.W = np.random.randn(in_features, out_features) *.01 # smaller weights make early training more stable.

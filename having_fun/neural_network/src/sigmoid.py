@@ -1,7 +1,8 @@
 import numpy as np
 from .activation import Activation
+from .layer import Layer
 
-class Sigmoid(Activation):
+class Sigmoid(Layer, Activation):
     """
     USAGE: Sigmoid()(x)
     """

@@ -43,22 +43,3 @@ Each lesson has 5 parts:
 
 # Logs
 You designed me a Neural Networks from scratch learning roadmap that you would teach me as teaching an AI researcher at OpenAI, Anthropic.
-
-
-Multi-layer Network:
-
-1. Function Composition: The Essence of Depth
-2. Hidden Representations
-3. Why Deep Beats Shallow
-4. Forward Propagation Through Multiple Layers
-5. Backpropagation Through Deep Networks
-6. Jacobians and the Chain Rule in Matrix Form
-7. Information Flow in Deep Networks
-8. Capacity, Width, and Depth
-9. Deep Network Architectures from Scratch
-10. Building an L-Layer Neural Network in NumPy
-11. Computational Complexity of Deep Networks
-12. Why Training Deep Networks Is Difficult
-13. Case Study: Learning XOR with Depth
-14. Deep Learning Framework Design
-15. Research Perspective: Depth as Hierarchical Computation
