@@ -2,7 +2,7 @@ import numpy as np
 from .activation import Activation
 from .layer import Layer
 
-class Sigmoid(Layer, Activation):
+class Sigmoid(Activation):
     """
     USAGE: Sigmoid()(x)
     """
@@ -22,7 +22,14 @@ class Sigmoid(Layer, Activation):
     #     return result
 
     def forward(self, Z):
-        self.A = 1 / (1 + np.exp(-Z))
+        self.Z = Z
+        positive = Z >= 0
+        self.A = np.empty_like(Z)
+
+        self.A[positive] = 1 / (1 + np.exp(-Z[positive]))
+        exp_Z = np.exp(Z[~positive])
+        self.A[~positive] = exp_Z / (1 + exp_Z)
+
         return self.A
     
     def backward(self, dA):

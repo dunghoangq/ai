@@ -1,14 +1,10 @@
 from abc import ABC, abstractmethod
 
-class Activation(ABC):
-    """
-    Base Activation.
-    """
+class LearnableActivation(ABC):
 
-    def __init__(self):
-        self.Z = None
-        self.A = None
-    
+    def __init__(self, parameters):
+        self.parameters = parameters
+
     @abstractmethod
     def forward(self, Z):
         return NotImplementedError
@@ -17,5 +13,6 @@ class Activation(ABC):
     def backward(self, dA):
         return NotImplementedError
     
-    def __call__(self, x):
-        return self.forward(x)
+    @abstractmethod
+    def update(self, lr):
+        return NotImplementedError
