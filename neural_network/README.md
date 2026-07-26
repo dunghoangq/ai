@@ -611,4 +611,8 @@ How modern LLMs choose
 - mixed precision
 
 We'll study training configurations from influential papers such as GPT-3, PaLM, Chinchilla, Llama, and similar large-scale models to understand the engineering principles behind their choices rather than memorising hyperparameters. 
+<<<<<<< HEAD
 We finished lessons 1 to 9. Please move to lesson 10.
+=======
+We finished lessons 1 to 13. Please move to lesson 14
+>>>>>>> cbd084f (nn > readme.)
