@@ -1,5 +1,5 @@
 {
     "embedding_model": "all-MiniLM-L6-v2",
-    "index_type": "HNSWIndex",
+    "index_type": "FlatIndex",
     "dimension": 384
 }

@@ -16,7 +16,7 @@ class Retriever:
             sparse = self.bm25.search(query, 20)
             candidates = self.rank_fusion.fuse(dense, sparse)
         else:
-            candidates = self.vector_store.search(query, 20)
+            candidates = self.vector_store.search(query, 50)
 
         if self.reranker:
             candidates = self.reranker.rank(query, candidates)
