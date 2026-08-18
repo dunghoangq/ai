@@ -42,9 +42,10 @@ class QuantileBinner:
     def transform(self, X: np.ndarray) -> np.ndarray:
         if self.cut_points_ is None:
             raise ValueError("transform requires fit() first")
-
         if X.ndim != 2:
             raise ValueError("X must be 2-dim.")
+        if np.isnan(X).any():
+            raise ValueError("NaN handling is not implemented yet.")
 
         X = np.asarray(X, dtype=np.float64)
         n_samples, n_features = X.shape
@@ -66,8 +67,11 @@ class QuantileBinner:
         return self.fit(X).transform(X)
 
     def get_threshold(self, feature_idx: int, bin_idx: int) -> float:
+        if self.cut_points_ is None:
+            raise ValueError("Binner must be fitted first.")
+        
         cuts = self.cut_points_[feature_idx]
 
-        if bin_idx > len(cuts):
+        if bin_idx >= len(cuts):
             raise IndexError("bin_idx exceed index range")
         return cuts[bin_idx]

@@ -7,7 +7,7 @@ class SplitCandidate:
     node: Node
     gain: float
     feature_idx: int
-    # bin_idx: int
+    bin_idx: int
 
     X: np.ndarray
     gradients: np.ndarray

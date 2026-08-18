@@ -348,3 +348,45 @@ or element-wise version of code:
 ```python
 hist_right = hist_parent - hist_left
 ```
+
+## Full implementation
+
+```text
+INPUT
+X, y
+│
+├──────────────────────────────────────┐
+│                                      │
+▼                                      │
+Fit QuantileBinner                     │
+│                                      │
+▼                                      │
+X_binned                               │
+                                       │
+Calculate fraud rate                   │
+                                       ▼
+                            base_score = log-odds
+                                       │
+                                       ▼
+                             initialise F₀(x)
+                                       │
+                                       ▼
+                          ┌── boosting loop ──┐
+                          │                   │
+                          │  p = sigmoid(F)   │
+                          │                   │
+                          │  g = p - y        │
+                          │                   │
+                          │  h = p(1-p)       │
+                          │                   │
+                          │  train tree       │
+                          │                   │
+                          │  f = tree(X)      │
+                          │                   │
+                          │  F ← F + ηf       │
+                          │                   │
+                          └───────────────────┘
+                                       │
+                                       ▼
+                                   trees[]
+```

@@ -28,12 +28,14 @@ class DecisionTree:
             reg_lambda: float = 1.0,
             gamma: float = 0.0,
             min_child_weight: float = 0.0,
+            max_bins: int = 256,
     ):
         self.max_depth = max_depth
         self.min_samples_split = min_samples_split
         self.reg_lambda = reg_lambda    # lambda in the Omega regularisation of the Loss, and in score w
         self.gamma = gamma  # gamma in the Omega, penalising number of leaves
         self.min_child_weight = min_child_weight # compare to total Hessian in a child node, both left and right hessians >= min_child_weight, else don't split
+        self.max_bins = max_bins
         self.root = None
 
     # def fit(self, X: np.ndarray, gradients: np.ndarray, hessians: np.ndarray) -> DecisionTree:
@@ -54,6 +56,10 @@ class DecisionTree:
     #     return self
     
     def _make_candidate(self, node: Node, X: np.ndarray, gradients: np.ndarray, hessians: np.ndarray, depth: int) -> SplitCandidate | None:
+        """
+        Can this node be split, and if so, what is the best split?
+        """
+
         n_samples = len(X)
 
         if depth >= self.max_depth:
@@ -61,11 +67,21 @@ class DecisionTree:
         if n_samples < self.min_samples_split:
             return None
 
-        best_gain, best_feature, best_threshold, best_left_mask, best_right_mask = self._find_best_split(X, gradients, hessians)
+        histogram = GradientHistogram.build(X_binned=X, gradients=gradients, hessians=hessians, max_bins=self.max_bins)
+        best_feature, best_bin, best_gain = self._find_best_split_histogram(histogram)
 
         if best_feature is None:
             return None
         if best_gain <= 0:
+            return None
+
+        threshold = best_bin + .5
+        left_mask = X[:, best_feature] < threshold
+        right_mask = ~left_mask
+
+        if not np.any(left_mask):
+            return None
+        if not np.any(right_mask):
             return None
 
         return SplitCandidate(
@@ -76,16 +92,17 @@ class DecisionTree:
             depth=depth,
             gain=best_gain,
             feature_idx=best_feature,
-            threshold=best_threshold,
-            left_mask=best_left_mask,
-            right_mask=best_right_mask
+            bin_idx=best_bin,
+            threshold=threshold,
+            left_mask=left_mask,
+            right_mask=right_mask,
         )
 
     def fit(self, X: np.ndarray, gradients: np.ndarray, hessians: np.ndarray) -> DecisionTree:
         """
         Best-first with heap.
         """
-        X = np.asarray(X, dtype=np.float64)
+        X = np.asarray(X)
         gradients = np.asarray(gradients, dtype=np.float64)
         hessians = np.asarray(hessians, dtype=np.float64)
         if X.ndim != 2:
@@ -181,6 +198,67 @@ class DecisionTree:
 
         return -G / (H + self.reg_lambda)
 
+    # def _find_best_split(self, X: np.ndarray, gradients: np.ndarray, hessians: np.ndarray) -> tuple[float, Optional[int], Optional[float], Optional[np.ndarray], Optional[np.ndarray]] | None:
+    #     n_samples, n_features = X.shape
+
+    #     best_gain = -np.inf
+    #     best_feature = None
+    #     best_threshold = None
+    #     best_left_mask = None
+    #     best_right_mask = None
+
+    #     G_total = np.sum(gradients)
+    #     H_total = np.sum(hessians)
+
+    #     parent_score = G_total**2 / (H_total + self.reg_lambda)
+
+    #     for feature_idx in range(n_features):
+    #         feature_val = X[:, feature_idx]
+    #         order = np.argsort(feature_val)
+
+    #         x_sorted = feature_val[order]
+    #         g_sorted = gradients[order]
+    #         h_sorted = hessians[order]
+
+    #         G_prefix = np.cumsum(g_sorted)
+    #         H_prefix = np.cumsum(h_sorted)
+
+    #         valid_split_positions = np.where(x_sorted[:-1] != x_sorted[1:])[0]
+
+    #         for i in valid_split_positions:
+    #             G_left = G_prefix[i]
+    #             H_left = H_prefix[i]
+
+    #             G_right = G_total - G_left
+    #             H_right = H_total - H_left
+
+    #             if H_left < self.min_child_weight:
+    #                 continue
+    #             if H_right < self.min_child_weight:
+    #                 continue
+
+    #             left_score = G_left**2 / (H_left + self.reg_lambda)
+    #             right_score = G_right**2 / (H_right + self.reg_lambda)
+
+    #             gain = .5 * (left_score + right_score - parent_score) - self.gamma
+
+    #             if gain > best_gain:
+    #                 best_gain = gain
+    #                 best_feature = feature_idx
+    #                 best_threshold = (x_sorted[i] + x_sorted[i+1]) / 2
+
+    #     if best_feature is not None:
+    #         best_left_mask = X[:, best_feature] < best_threshold
+    #         best_right_mask = ~best_left_mask
+        
+    #     return (
+    #         best_gain,
+    #         best_feature,
+    #         best_threshold,
+    #         best_left_mask,
+    #         best_right_mask,
+    #     )
+
     def _find_best_split(self, X: np.ndarray, gradients: np.ndarray, hessians: np.ndarray) -> tuple[float, Optional[int], Optional[float], Optional[np.ndarray], Optional[np.ndarray]] | None:
         n_samples, n_features = X.shape
 
@@ -270,6 +348,12 @@ class DecisionTree:
 
         return gain
 
+    def _gain_for_sum(self, G_left: float, H_left: float, G_right: float, H_right: float) -> float:
+        G = G_left + G_right
+        H = H_left + H_right
+
+        return .5 * (G_left**2/(H_left + self.reg_lambda) + G_right**2/(H_right + self.reg_lambda) - G**2/(H + self.reg_lambda)) - self.gamma
+
     def _predict_one(self, x, node):
         if node.is_leaf:
             return node.value
@@ -323,7 +407,7 @@ class DecisionTree:
             depth + 1
         )
 
-    def _find_best_split_histogram(self, histogram: GradientHistogram):
+    def _find_best_split_histogram(self, histogram: GradientHistogram) -> tuple[int, int, np.float64]:
         """
         Bin-based best split
         """
@@ -334,23 +418,31 @@ class DecisionTree:
         for feature_idx in range(histogram.n_features):
             G_total = np.sum(histogram.gradient_sum[feature_idx])
             H_total = np.sum(histogram.hessian_sum[feature_idx])
+            N_total = np.sum(histogram.count[feature_idx])
 
             G_left = 0.0
             H_left = 0.0
+            N_left = 0
 
             for bin_idx in range(histogram.max_bins - 1):
                 G_left += histogram.gradient_sum[feature_idx, bin_idx]
                 H_left += histogram.hessian_sum[feature_idx, bin_idx]
+                N_left += histogram.count[feature_idx, bin_idx]
 
                 G_right = G_total - G_left
                 H_right = H_total - H_left
+                N_right = N_total - N_left
 
+                if N_left == 0:
+                    continue
+                if N_right == 0:
+                    continue
                 if H_left < self.min_child_weight:
                     continue
                 if H_right < self.min_child_weight:
                     continue
 
-                gain = self._gain(G_left, H_left, G_right, H_right)
+                gain = self._gain_for_sum(G_left, H_left, G_right, H_right)
 
                 if gain > best_gain:
                     best_gain = gain
