@@ -27,16 +27,23 @@ class GradientHistogram:
 
         hist = cls(n_features, max_bins)
 
-        for i in range(n_samples):
-            g = gradients[i]
-            h = hessians[i]
+        # for i in range(n_samples):
+        #     g = gradients[i]
+        #     h = hessians[i]
 
-            for feature_idx in range(n_features):
-                bin_idx = X_binned[i, feature_idx]
+        #     for feature_idx in range(n_features):
+        #         bin_idx = X_binned[i, feature_idx]
 
-                hist.gradient_sum[feature_idx, bin_idx] += g
-                hist.hessian_sum[feature_idx, bin_idx] += h
-                hist.count[feature_idx, bin_idx] += 1
+        #         hist.gradient_sum[feature_idx, bin_idx] += g
+        #         hist.hessian_sum[feature_idx, bin_idx] += h
+        #         hist.count[feature_idx, bin_idx] += 1
+
+        for feature_idx in range(n_features):
+            bins = X_binned[:, feature_idx]
+
+            np.add.at(hist.gradient_sum[feature_idx], bins, gradients)
+            np.add.at(hist.hessian_sum[feature_idx], bins, hessians)
+            np.add.at(hist.count[feature_idx], bins, 1)
 
         return hist
 
