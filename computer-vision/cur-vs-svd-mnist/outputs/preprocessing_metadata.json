@@ -1,0 +1,8 @@
+{
+  "flattening": "row-major 28x28 -> 784",
+  "pixel_transform": "float32(pixel) / 255.0",
+  "fitted_statistics": false,
+  "fit_on": "training partition only",
+  "feature_count": 784,
+  "feature_order": "row-major pixel order"
+}
